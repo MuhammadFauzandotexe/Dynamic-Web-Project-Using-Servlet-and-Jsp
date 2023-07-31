@@ -1,4 +1,5 @@
 package com.zan;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +13,9 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         String username = request.getParameter("userid");
         if (password.equals(PASSWORD) && username.equals(USERNAME)){
+            Cookie userIdCookie = new Cookie("userId", username);
+            userIdCookie.setMaxAge(24 * 60 * 60);
+            response.addCookie(userIdCookie);
             System.out.println("Activate");
             response.getWriter().write("success");
         } else {

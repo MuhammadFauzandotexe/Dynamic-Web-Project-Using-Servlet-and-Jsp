@@ -1,14 +1,18 @@
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.HashMap" %>
+<%@ page import="java.net.URLDecoder" %>
+<%@ page import="java.util.Arrays" %>
+<%@ page import="java.util.Optional" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <%@ page import="com.zan.entity.Student" %>
 <%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.zan.CookieUtil" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Halaman Selamat Datang</title>
+    <title>Welcome</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,8 +33,6 @@
         th {
             background-color: #f2f2f2;
         }
-
-        /* Styling for the popup */
         .popup {
             display: none;
             position: fixed;
@@ -45,9 +47,8 @@
     </style>
 </head>
 <body>
-<h2>Selamat Datang</h2>
 <%
-    // Buat sebuah List untuk menyimpan data mahasiswa
+    String userIdCookieValue = CookieUtil.getCookieValue(request, "userId").orElse("Tamu");
     List<Student> students = new ArrayList<>();
     students.add(new Student("S001", "Arya", "DEP001", 35));
     students.add(new Student("S002", "Ayu", "DEP001", 70));
@@ -57,11 +58,7 @@
     students.add(new Student("S006", "Jafar", "DEP003", 32));
     students.add(new Student("S007", "Fauzan", "DEP003", 70));
     students.add(new Student("S008", "Yova", "DEP003", 20));
-
-    // Buat sebuah Map untuk menyimpan data mahasiswa berdasarkan departemen
     Map<String, Map<String, Integer>> studentDataByDepartment = new HashMap<>();
-
-    // Isi data ke dalam Map studentDataByDepartment
     for (Student student : students) {
         String department = student.getDepartment();
         Map<String, Integer> departmentStudents = studentDataByDepartment.getOrDefault(department, new HashMap<String, Integer>());
@@ -69,6 +66,8 @@
         studentDataByDepartment.put(department, departmentStudents);
     }
 %>
+<h2 style="text-align: center">Welcome, <%= userIdCookieValue %>!</h2>
+
 <table>
     <tr>
         <th>Departemen</th>
@@ -90,14 +89,11 @@
     <% } %>
     <% double passPercentage = (passCount * 100.0) / totalStudents; %>
     <tr>
-        <!-- Kolom Pass % diberi atribut colspan untuk menggabungkan kolom ke kanan -->
         <td colspan="2">Pass %:</td>
         <td colspan="2"><%= String.format("%.2f", passPercentage) %> %</td>
     </tr>
     <% } %>
 </table>
-
-<!-- Popup -->
 <div class="popup" id="popup">
     <h3 id="popupStudentName"></h3>
     <button onclick="hidePopup()">Close</button>
@@ -113,17 +109,14 @@
             popup.style.display = 'block';
         }
     }
-
     function hidePopup() {
         const popup = document.getElementById('popup');
         popup.style.display = 'none';
     }
-
     function getStudentById(studentId) {
         const studentList = <%= new Gson().toJson(students) %>;
         return studentList.find(student => student.studentID === studentId);
     }
 </script>
-
 </body>
 </html>

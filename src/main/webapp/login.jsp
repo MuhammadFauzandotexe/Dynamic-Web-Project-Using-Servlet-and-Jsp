@@ -10,7 +10,7 @@
 
 <h2>Login</h2>
 <form action="LoginService" method="post">
-    Enter Username : <input type="text" name="userid" id="username"><br>
+    Enter UserId : <input type="text" name="userid" id="username"><br>
     <br>
     Enter Password : <input type="password" name="password" id="password">
     <input type="submit" value="Login">
